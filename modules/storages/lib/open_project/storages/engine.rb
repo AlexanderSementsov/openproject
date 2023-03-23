@@ -111,6 +111,11 @@ module OpenProject::Storages
         ::Queries::Register.register(::Queries::Storages::FileLinks::FileLinkQuery) do
           filter ::Queries::Storages::FileLinks::Filter::StorageFilter
         end
+
+        ::Queries::Register.register(::Queries::Storages::ProjectStorages::ProjectStoragesQuery) do
+          filter ::Queries::Storages::ProjectStorages::Filter::StorageFilter
+          filter ::Queries::Storages::ProjectStorages::Filter::ProjectFilter
+        end
       end
     end
 
@@ -118,6 +123,14 @@ module OpenProject::Storages
     # and the return value is a string.
     add_api_path :storages do
       "#{root}/storages"
+    end
+
+    add_api_path :project_storages do
+      "#{root}/project_storages"
+    end
+
+    add_api_path :project_storage do |id|
+      "#{root}/project_storages/#{id}"
     end
 
     add_api_path :storage do |storage_id|
@@ -155,6 +168,7 @@ module OpenProject::Storages
     # Add api endpoints specific to this module
     add_api_endpoint 'API::V3::Root' do
       mount ::API::V3::Storages::StoragesAPI
+      mount ::API::V3::ProjectStorages::ProjectStoragesAPI
       mount ::API::V3::FileLinks::FileLinksAPI
     end
 
