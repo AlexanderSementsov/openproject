@@ -298,6 +298,12 @@ module API
 
         property :timeline_labels
 
+        property :timestamps,
+                 getter: ->(*) { timestamps.map(&:to_s) },
+                 setter: ->(fragment:, **) {
+                   self.timestamps = Array(fragment).map { |t| Timestamp.parse(t) }
+                 }
+
         # Visible representation of the results
         property :display_representation
 
