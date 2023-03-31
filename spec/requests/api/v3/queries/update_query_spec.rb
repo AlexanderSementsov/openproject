@@ -30,6 +30,10 @@ require 'spec_helper'
 
 describe "PATCH /api/v3/queries/:id" do
   let(:user) { create(:admin) }
+  let(:status) { create(:status) }
+  let(:project) { create(:project) }
+  let(:timestamps) { [1.week.ago.iso8601, "P0D"] }
+
   let!(:query) do
     create(
       :global_query,
@@ -45,6 +49,7 @@ describe "PATCH /api/v3/queries/:id" do
       name: "Dummy Query",
       public: true,
       showHierarchies: false,
+      timestamps:,
       filters: [
         {
           name: "Status",
@@ -98,8 +103,6 @@ describe "PATCH /api/v3/queries/:id" do
       }
     }
   end
-  let(:status) { create(:status) }
-  let(:project) { create(:project) }
 
   def json
     JSON.parse last_response.body
@@ -137,6 +140,7 @@ describe "PATCH /api/v3/queries/:id" do
       expect(query.public).to be true
       expect(query.display_sums).to be false
 
+      expect(query.timestamps).to eq(timestamps.map { |t| Timestamp.parse(t) })
       expect(query.filters.size).to eq 1
       filter = query.filters.first
 
